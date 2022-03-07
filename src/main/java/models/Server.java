@@ -1,6 +1,7 @@
-package com.jaid.chatserver.models;
+package models;
 
-import com.jaid.chatserver.handlers.ClientHandler;
+import handlers.ClientHandler;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 

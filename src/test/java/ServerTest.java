@@ -1,6 +1,4 @@
-package com.jaid.chatserver;
-
-import com.jaid.chatserver.models.DummyClient;
+import models.DummyClient;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
