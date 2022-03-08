@@ -1,7 +1,6 @@
 package handlers;
 
 import org.json.simple.JSONObject;
-import services.ChatroomServices;
 import services.ClientServices;
 
 import java.net.Socket;

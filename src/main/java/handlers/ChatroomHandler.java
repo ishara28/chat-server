@@ -1,20 +1,17 @@
 package handlers;
 
-import daos.ChatroomDAO;
-import daos.ClientDAO;
 import org.json.simple.JSONObject;
-import services.ChatroomServices;
-import services.ClientServices;
+import services.ChatRoomServices;
 
 import java.net.Socket;
 
 public class ChatroomHandler {
-    private ChatroomServices chatroomServices;
+    private ChatRoomServices chatroomServices;
 
     private static ChatroomHandler instance;
 
     private ChatroomHandler(){
-        chatroomServices = ChatroomServices.getInstance();
+        chatroomServices = ChatRoomServices.getInstance();
     }
 
     public static ChatroomHandler getInstance(){
@@ -28,7 +25,11 @@ public class ChatroomHandler {
         return instance;
     }
 
-    public JSONObject list(Socket sock) {
-        return chatroomServices.listChatrooms(sock);
+    public JSONObject list(Socket socket) {
+        return chatroomServices.listChatrooms(socket);
     }
+
+//    public JSONObject who(Socket socket) {
+//        return chatroomServices.listParticipants(socket);
+//    }
 }

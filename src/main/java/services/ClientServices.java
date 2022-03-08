@@ -1,9 +1,10 @@
 package services;
 
 import constants.ResponseTypes;
-import daos.ChatroomDAO;
+import daos.ChatRoomDAO;
 import daos.ClientDAO;
 import org.json.simple.JSONObject;
+import utils.Utils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,18 +12,20 @@ import java.net.Socket;
 
 public class ClientServices {
     private ClientDAO clientDAO;
-    private ChatroomDAO chatroomDAO;
+    private ChatRoomDAO chatroomDAO;
     private PrintWriter out;
     private JSONObject outputData;
     private JSONObject returnData;
-    private ChatroomServices chatroomServices;
+    private ChatRoomServices chatroomServices;
+    private Utils utils;
 
     private static ClientServices instance;
 
     private ClientServices(){
         clientDAO = ClientDAO.getInstance();
-        chatroomDAO = ChatroomDAO.getInstance();
-        chatroomServices = ChatroomServices.getInstance();
+        chatroomDAO = ChatRoomDAO.getInstance();
+        chatroomServices = ChatRoomServices.getInstance();
+        utils = Utils.getInstance();
     }
 
     public static ClientServices getInstance(){
@@ -55,10 +58,9 @@ public class ClientServices {
             outputData.put("type", ResponseTypes.ROOM_CHANGE);
             outputData.put("identity", data.get("identity").toString());
             outputData.put("former", "");
-            outputData.put("roomid", "main1"); // todo: "getMainHallId()"
+            outputData.put("roomid", utils.getMainHallId());
             // broadcast message
-//            chatroomService.broadcast(getMainHallId(), outputData); //todo
-            chatroomServices.broadcast("main1", outputData);
+            chatroomServices.broadcast(utils.getMainHallId(), outputData);
 
             System.out.println("ClientService.registerClient done...");
             return returnData;

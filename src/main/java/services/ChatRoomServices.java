@@ -1,7 +1,7 @@
 package services;
 
 import constants.ResponseTypes;
-import daos.ForeignChatroomsDAO;
+import daos.ChatRoomDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -10,23 +10,23 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Arrays;
 
-public class ChatroomServices {
-    private ForeignChatroomsDAO foreignChatroomsDAO;
+public class ChatRoomServices {
+    private ChatRoomDAO chatRoomDAO;
     private PrintWriter out;
     private JSONObject returnData;
     private JSONArray roomsJsonArray;
 
-    private static ChatroomServices instance;
+    private static ChatRoomServices instance;
 
-    private ChatroomServices(){
-        foreignChatroomsDAO = ForeignChatroomsDAO.getInstance();
+    private ChatRoomServices(){
+        chatRoomDAO = ChatRoomDAO.getInstance();
     }
 
-    public static ChatroomServices getInstance(){
+    public static ChatRoomServices getInstance(){
         if (instance == null){
-            synchronized(ChatroomServices.class){
+            synchronized(ChatRoomServices.class){
                 if (instance == null){
-                    instance = new ChatroomServices();//instance will be created at request time
+                    instance = new ChatRoomServices();//instance will be created at request time
                 }
             }
         }
@@ -46,7 +46,7 @@ public class ChatroomServices {
 
     public JSONObject listChatrooms(Socket socket) {
         try {
-            String [] rooms = foreignChatroomsDAO.getRoomIds();
+            String [] rooms = chatRoomDAO.getRoomIds();
 
             returnData = new JSONObject();
             returnData.put("type", ResponseTypes.ROOMLIST);
@@ -66,4 +66,19 @@ public class ChatroomServices {
             return null;
         }
     }
+
+//    public JSONObject listParticipants(Socket socket){
+//        String roomid = clientsDAO.getClient(socket).roomid;
+//        const roomid = clientsDAO.getClient(sock)?.roomid;
+//        if (!roomid) return false;
+//        const chatroom = ServiceLocator.chatroomDAO.getRoom(roomid);
+//        writeJSONtoSocket(sock, {
+//                type: responseTypes.ROOM_CONTENTS,
+//                roomid,
+//                identities: Array.from(chatroom.participants),
+//                owner: chatroom.owner ?? ""
+//        });
+//        console.log("ChatroomService.listParticipants done...");
+//        return true
+//    }
 }
