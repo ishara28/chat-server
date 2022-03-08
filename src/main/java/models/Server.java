@@ -1,18 +1,20 @@
 package models;
 
-import handlers.ClientHandler;
+import handlers.ClientThreadHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 
 public class Server {
-    private ServerSocket serverSocket;
+    private ServerSocket clientSocket;
 
     public void start(int port) {
         try {
-            serverSocket = new ServerSocket(port);
+            clientSocket = new ServerSocket(port);
+            System.out.println("******* Client connection started on " + String.valueOf(clientSocket.getLocalSocketAddress()) + " *******");
+
             while (true) {
-                new ClientHandler(serverSocket.accept()).start();
+                new ClientThreadHandler(clientSocket.accept()).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -21,7 +23,7 @@ public class Server {
 
     public void stop(){
         try {
-            serverSocket.close();
+            clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
