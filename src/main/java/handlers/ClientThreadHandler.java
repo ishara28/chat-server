@@ -15,8 +15,10 @@ public class ClientThreadHandler extends Thread {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
-    JSONObject jsonObj;
+    private JSONObject data;
     JSONParser parser = new JSONParser();
+    ClientHandler clientHandler = ClientHandler.getInstance();
+    ChatroomHandler chatroomHandler = ChatroomHandler.getInstance();
 
     public ClientThreadHandler(Socket socket) {
         this.clientSocket = socket;
@@ -29,34 +31,34 @@ public class ClientThreadHandler extends Thread {
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                jsonObj = (JSONObject) parser.parse(inputLine);
+                data = (JSONObject) parser.parse(inputLine);
 
-                if (ResponseTypes.NEW_IDENTITY.equals(jsonObj.get("type"))) {
-                    out.println(ResponseTypes.NEW_IDENTITY);
-                } else if (ResponseTypes.LIST.equals(jsonObj.get("type"))){
-                    out.println(ResponseTypes.LIST);
-                } else if (ResponseTypes.WHO.equals(jsonObj.get("type"))){
+                if (ResponseTypes.NEW_IDENTITY.equals(data.get("type"))) {
+                    System.out.println(clientHandler.newIdentity(data, clientSocket));
+                } else if (ResponseTypes.LIST.equals(data.get("type"))){
+                    System.out.println(chatroomHandler.list(clientSocket));
+                } else if (ResponseTypes.WHO.equals(data.get("type"))){
                     out.println(ResponseTypes.WHO);
-                } else if (ResponseTypes.CREATE_ROOM.equals(jsonObj.get("type"))){
+                } else if (ResponseTypes.CREATE_ROOM.equals(data.get("type"))){
                     out.println(ResponseTypes.CREATE_ROOM);
-                } else if (ResponseTypes.JOIN_ROOM.equals(jsonObj.get("type"))){
+                } else if (ResponseTypes.JOIN_ROOM.equals(data.get("type"))){
                     out.println(ResponseTypes.JOIN_ROOM);
-                } else if (ResponseTypes.MOVE_JOIN.equals(jsonObj.get("type"))){
+                } else if (ResponseTypes.MOVE_JOIN.equals(data.get("type"))){
                     out.println(ResponseTypes.MOVE_JOIN);
-                } else if (ResponseTypes.DELETE_ROOM.equals(jsonObj.get("type"))){
+                } else if (ResponseTypes.DELETE_ROOM.equals(data.get("type"))){
                     out.println(ResponseTypes.DELETE_ROOM);
-                } else if (ResponseTypes.MESSAGE.equals(jsonObj.get("type"))){
+                } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){
                     out.println(ResponseTypes.MESSAGE);
-                } else if (ResponseTypes.QUIT.equals(jsonObj.get("type"))){
+                } else if (ResponseTypes.QUIT.equals(data.get("type"))){
                     out.println(ResponseTypes.QUIT);
                     break;
                 }
 
-                if (".".equals(jsonObj.get("type"))) {
+                if (".".equals(data.get("type"))) {
                     out.println("bye");
                     break;
                 }
-                out.println(jsonObj.get("type"));
+//                out.println(data.get("type"));
             }
 
             in.close();
