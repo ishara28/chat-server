@@ -37,10 +37,8 @@ public class ChatRoomDAO {
     }
 
     public String [] getRoomIds(){
-//        const roomids = _.flatten(_.map(_.values(this.chatrooms), (set) => Array.from(set))); //todo: setup database with rooms
-
-        String [] roomids = {"MainHall-s1", "MainHall-s2", "jokes"};
-        System.out.println("ForeignChatroomsDAO.getRoomIds");
+        String [] roomids = LocalDataStore.localChatRooms.keySet().toArray(new String[0]);
+        System.out.println("ChatroomsDAO.getRoomIds");
         for (int i=0; i<roomids.length; i++){
             System.out.println(roomids[i]);
         }
