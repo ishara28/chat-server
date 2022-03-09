@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ClientThreadHandler extends Thread {
@@ -63,9 +62,9 @@ public class ClientThreadHandler extends Thread {
                 }
             }
 
-            in.close();
-            out.close();
-            socket.close();
+//            in.close();
+//            out.close();
+//            socket.close();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

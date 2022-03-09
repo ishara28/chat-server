@@ -9,6 +9,7 @@ import utils.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ClientServices {
     private ClientDAO clientDAO;
@@ -51,7 +52,8 @@ public class ClientServices {
 
             out = new PrintWriter(socket.getOutputStream(), true);
             out.println(returnData);
-//            writeJSONtoSocket(sock, { type: responseTypes.NEW_IDENTITY, approved: "true" }) //todo: may be change
+//            out.close();
+
             chatroomDAO.addParticipantDefault(data.get("identity").toString());
 
             outputData = new JSONObject();

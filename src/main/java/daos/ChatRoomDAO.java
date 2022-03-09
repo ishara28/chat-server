@@ -1,12 +1,14 @@
 package daos;
 
-import database.LocalDataStore;
 import pojos.LocalChatRoom;
 import utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ChatRoomDAO {
+
+    public static HashMap<String, LocalChatRoom> localChatRooms = new HashMap<>();
 
     private static ChatRoomDAO instance;
     private Utils utils;
@@ -17,7 +19,7 @@ public class ChatRoomDAO {
         LocalChatRoom mainHall = new LocalChatRoom();
         mainHall.setOwner("");
         mainHall.setParticipants(new ArrayList<>());
-        LocalDataStore.localChatRooms.put(utils.getMainHallId(), mainHall);
+        localChatRooms.put(utils.getMainHallId(), mainHall);
     }
 
     public static ChatRoomDAO getInstance(){
@@ -33,15 +35,29 @@ public class ChatRoomDAO {
 
     public void addParticipantDefault(String participant){
         System.out.println("ChatroomDAO.addParticipantDefault " + participant + " to " + utils.getMainHallId());
-        LocalDataStore.localChatRooms.get(utils.getMainHallId()).getParticipants().add(participant);
+
+        LocalChatRoom updatedChatRoom = localChatRooms.get(utils.getMainHallId());
+        ArrayList<String> updatedParticipants = updatedChatRoom.getParticipants();
+        updatedParticipants.add(participant);
+        updatedChatRoom.setParticipants(updatedParticipants);
+        localChatRooms.put(utils.getMainHallId(), updatedChatRoom);
     }
 
     public String [] getRoomIds(){
-        String [] roomids = LocalDataStore.localChatRooms.keySet().toArray(new String[0]);
+        String [] roomids = localChatRooms.keySet().toArray(new String[0]);
         System.out.println("ChatroomsDAO.getRoomIds");
         for (int i=0; i<roomids.length; i++){
             System.out.println(roomids[i]);
         }
         return roomids;
+    }
+
+    public ArrayList<String> getParticipants(String roomid){
+        ArrayList<String> participants =  localChatRooms.get(roomid).getParticipants();
+        System.out.println("participants of " + roomid);
+        for (int i=0; i<participants.size(); i++){
+            System.out.println(participants.get(i));
+        }
+        return participants;
     }
 }

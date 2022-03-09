@@ -1,18 +1,22 @@
 package daos;
 
-import database.LocalDataStore;
-import pojos.LocalChatRoom;
 import pojos.LocalClient;
+import utils.Utils;
 
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 
 public class ClientDAO {
 
+    private static HashMap<String, LocalClient> localClients = new HashMap<>();
+    private Utils utils;
+
     private static ClientDAO instance;
 
-    private ClientDAO(){}
+    private ClientDAO(){
+        utils = Utils.getInstance();
+    }
 
     public static ClientDAO getInstance(){
         if (instance == null){
@@ -26,15 +30,22 @@ public class ClientDAO {
     }
 
     public void addNewClient(String identity, Socket socket){
-        //todo: setup database here
-
         LocalClient localClient = new LocalClient();
         localClient.setSocket(socket);
-        localClient.setRoomid("MainHall-s1"); //todo: add a find room id function
+        localClient.setRoomid(utils.getMainHallId());
 
-        LocalDataStore.localClients.put("identity", localClient);
+        localClients.put(identity, localClient);
 
         System.out.println("ClientsDAO.addNewClient " + identity);
+    }
+
+    public ArrayList<LocalClient> getClientsFromId(ArrayList<String> ids) {
+        ArrayList<LocalClient> roomParticipants = new ArrayList<>();
+        for (int i=0; i<ids.size(); i++){
+            roomParticipants.add(localClients.get(ids.get(i)));
+        }
+        System.out.println("ClientsDAO.getClientsFromId");
+        return roomParticipants;
     }
 
     public LocalClient getClient(Socket socket){

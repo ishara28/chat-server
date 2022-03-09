@@ -5,10 +5,12 @@ import daos.ChatRoomDAO;
 import daos.ClientDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import pojos.LocalClient;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ChatRoomServices {
@@ -37,13 +39,19 @@ public class ChatRoomServices {
     }
 
     public void broadcast(String roomid, JSONObject message){
-//        const participants = ServiceLocator.chatroomDAO.getParticipants(roomid); //todo
-        // get sockets
-//        const clients = ServiceLocator.clientsDAO.getClientsFromId(participants) //todo
-        // broeadcast
-//        clients.forEach(client => {
-//                writeJSONtoSocket(client.socket, message);
-//        }) //todo
+        ArrayList<String> participants = chatRoomDAO.getParticipants(roomid);
+        ArrayList<LocalClient> clients = clientDAO.getClientsFromId(participants); //todo
+
+        clients.forEach((i) -> {
+            try {
+                out = new PrintWriter(i.getSocket().getOutputStream(), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            out.println(message);
+//            out.close();
+        });
+
         System.out.println("ChatroomService.broadcast done...");
     }
 
