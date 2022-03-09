@@ -9,10 +9,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ClientThreadHandler extends Thread {
-    private Socket clientSocket;
+    private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     private JSONObject data;
@@ -21,23 +22,25 @@ public class ClientThreadHandler extends Thread {
     ChatroomHandler chatroomHandler = ChatroomHandler.getInstance();
 
     public ClientThreadHandler(Socket socket) {
-        this.clientSocket = socket;
+        this.socket = socket;
     }
 
     public void run() {
+
         try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 data = (JSONObject) parser.parse(inputLine);
 
                 if (ResponseTypes.NEW_IDENTITY.equals(data.get("type"))) {
-                    System.out.println(clientHandler.newIdentity(data, clientSocket));
+                    System.out.println(clientHandler.newIdentity(data, socket));
                 } else if (ResponseTypes.LIST.equals(data.get("type"))){
-                    System.out.println(chatroomHandler.list(clientSocket));
+                    System.out.println(chatroomHandler.list(socket));
                 } else if (ResponseTypes.WHO.equals(data.get("type"))){
+                    System.out.println(chatroomHandler.who(socket));
                     out.println(ResponseTypes.WHO);
                 } else if (ResponseTypes.CREATE_ROOM.equals(data.get("type"))){
                     out.println(ResponseTypes.CREATE_ROOM);
@@ -58,12 +61,11 @@ public class ClientThreadHandler extends Thread {
                     out.println("bye");
                     break;
                 }
-//                out.println(data.get("type"));
             }
 
             in.close();
             out.close();
-            clientSocket.close();
+            socket.close();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

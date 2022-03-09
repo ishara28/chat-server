@@ -29,7 +29,7 @@ public class ChatroomHandler {
         return chatroomServices.listChatrooms(socket);
     }
 
-//    public JSONObject who(Socket socket) {
-//        return chatroomServices.listParticipants(socket);
-//    }
+    public JSONObject who(Socket socket) {
+        return chatroomServices.listParticipants(socket);
+    }
 }

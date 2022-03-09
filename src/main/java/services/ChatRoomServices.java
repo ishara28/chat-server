@@ -2,6 +2,7 @@ package services;
 
 import constants.ResponseTypes;
 import daos.ChatRoomDAO;
+import daos.ClientDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -15,11 +16,13 @@ public class ChatRoomServices {
     private PrintWriter out;
     private JSONObject returnData;
     private JSONArray roomsJsonArray;
+    private ClientDAO clientDAO;
 
     private static ChatRoomServices instance;
 
     private ChatRoomServices(){
         chatRoomDAO = ChatRoomDAO.getInstance();
+        clientDAO = ClientDAO.getInstance();
     }
 
     public static ChatRoomServices getInstance(){
@@ -67,8 +70,11 @@ public class ChatRoomServices {
         }
     }
 
-//    public JSONObject listParticipants(Socket socket){
-//        String roomid = clientsDAO.getClient(socket).roomid;
+    public JSONObject listParticipants(Socket socket){
+
+        return null;
+
+//        String roomid = clientDAO.getClient(socket).roomid;
 //        const roomid = clientsDAO.getClient(sock)?.roomid;
 //        if (!roomid) return false;
 //        const chatroom = ServiceLocator.chatroomDAO.getRoom(roomid);
@@ -80,5 +86,5 @@ public class ChatRoomServices {
 //        });
 //        console.log("ChatroomService.listParticipants done...");
 //        return true
-//    }
+    }
 }

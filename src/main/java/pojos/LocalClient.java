@@ -3,16 +3,15 @@ package pojos;
 import java.net.Socket;
 
 public class LocalClient {
-//    private Socket socket;
-    private String identity;
+    private Socket socket;
     private String roomid;
 
-    public String getIdentity() {
-        return identity;
+    public Socket getSocket() {
+        return socket;
     }
 
-    public void setIdentity(String identity) {
-        this.identity = identity;
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
 
     public String getRoomid() {

@@ -1,10 +1,12 @@
 package daos;
 
 import database.LocalDataStore;
+import pojos.LocalChatRoom;
 import pojos.LocalClient;
 
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class ClientDAO {
 
@@ -27,7 +29,7 @@ public class ClientDAO {
         //todo: setup database here
 
         LocalClient localClient = new LocalClient();
-        localClient.setIdentity(identity);
+        localClient.setSocket(socket);
         localClient.setRoomid("MainHall-s1"); //todo: add a find room id function
 
         LocalDataStore.localClients.put("identity", localClient);
@@ -35,10 +37,17 @@ public class ClientDAO {
         System.out.println("ClientsDAO.addNewClient " + identity);
     }
 
-//    public LocalClient getClient(Socket socket){
+    public LocalClient getClient(Socket socket){
+//        Collection<LocalChatRoom> localClientsCollection = LocalDataStore.localChatRooms.values();
+//        for (int i=0; i<localClientsCollection.size(); i++){
+//            localClientsCollection.
+//        }
+//        String identity =
+        return null;
+
 //        const identity = _.findKey(this.clients, ['socket', socket])
 //        if (!identity) return;
 //        console.log("ClientsDAO.getClient", identity);
 //        return this.clients[identity];
-//    }
+    }
 }
