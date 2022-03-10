@@ -33,7 +33,7 @@ public class ChatroomHandler {
         return chatroomServices.listParticipants(socket);
     }
 
-//    public JSONObject createRoom(JSONObject data, Socket socket) {
-//        return chatroomServices.createRoom(data, socket);
-//    }
+    public JSONObject createRoom(JSONObject data, Socket socket) {
+        return chatroomServices.createRoom(data, socket);
+    }
 }

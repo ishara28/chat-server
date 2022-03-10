@@ -107,5 +107,50 @@ public class ChatRoomServices {
         return message;
     }
 
+    public JSONObject createRoom(JSONObject data, Socket socket){
+        String roomid = data.get("roomid").toString();
+        String former = clientDAO.getClient(socket).getRoomid();
+        String identity = clientDAO.getIdentity(socket);
 
+        if(former == null || identity == null){
+            return null;
+        }
+
+        //todo add if conditions
+
+        chatRoomDAO.addNewChatroom(former, roomid, identity);
+        clientDAO.joinChatroom(roomid, identity);
+
+        JSONObject createRoomMessage = new JSONObject();
+        createRoomMessage.put("type", ResponseTypes.CREATE_ROOM);
+        createRoomMessage.put("roomid", roomid);
+        createRoomMessage.put("approved", "true");
+
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(createRoomMessage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // broadcast to previous room
+        JSONObject broadcastMessage = new JSONObject();
+        broadcastMessage.put("type", ResponseTypes.ROOM_CHANGE);
+        broadcastMessage.put("identity", identity);
+        broadcastMessage.put("former", former);
+        broadcastMessage.put("roomid", roomid);
+
+        broadcast(former, broadcastMessage);
+
+        // send to client itself
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(broadcastMessage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("ChatroomService.createRoom done...");
+        return createRoomMessage;
+    }
 }

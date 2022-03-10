@@ -99,4 +99,16 @@ public class ChatRoomDAO {
         System.out.println("ChatroomDAO.getRoom" + roomid);
         return localChatRooms.get(roomid);
     }
+
+    public void addNewChatroom(String previousRoomId, String newRoomId, String identity){
+        // remove from previous chatroom
+        removeParticipant(previousRoomId, identity);
+        LocalChatRoom newChatRoom = new LocalChatRoom();
+        newChatRoom.setOwner(identity);
+        ArrayList<String> participants = new ArrayList<>();
+        participants.add(identity);
+        newChatRoom.setParticipants(participants);
+        localChatRooms.put(newRoomId, newChatRoom);
+        System.out.println("ChatroomDAO.addNewChatroom "+ identity + " from " + previousRoomId + " to " + newRoomId);
+    }
 }
