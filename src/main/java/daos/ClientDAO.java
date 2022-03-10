@@ -48,17 +48,55 @@ public class ClientDAO {
         return roomParticipants;
     }
 
-    public LocalClient getClient(Socket socket){
-//        Collection<LocalChatRoom> localClientsCollection = LocalDataStore.localChatRooms.values();
-//        for (int i=0; i<localClientsCollection.size(); i++){
-//            localClientsCollection.
-//        }
-//        String identity =
-        return null;
+    public String getIdentity(Socket socket){
+        final String[] identity = {null};
 
-//        const identity = _.findKey(this.clients, ['socket', socket])
-//        if (!identity) return;
-//        console.log("ClientsDAO.getClient", identity);
-//        return this.clients[identity];
+        localClients.forEach((key, value) -> {
+            if ( value.getSocket() == socket){
+                identity[0] = key;
+            }
+        });
+
+        return identity[0];
+    }
+
+    public void joinChatroom(String newRoomId, String identity){
+        LocalClient localClient = localClients.get(identity);
+        localClient.setRoomid(newRoomId);
+        localClients.put(identity, localClient);
+        System.out.println("ClientsDAO.joinChatroom " + identity);
+    }
+
+    public boolean removeClient(Socket socket){
+        final String[] identity = {null};
+        localClients.forEach((key, value) -> {
+            if ( value.getSocket() == socket){
+                identity[0] = key;
+            }
+        });
+
+        if (identity[0] == null){
+            return false;
+        }
+
+        System.out.println("ClientsDAO.deleteClient " + identity[0]);
+        if (localClients.remove(identity[0]) != null){
+            return true;
+        };
+
+        return false;
+    }
+
+    public LocalClient getClient(Socket socket){ //todo
+        final String[] identity = {null};
+        localClients.forEach((key, value) -> {
+            if ( value.getSocket() == socket){
+                identity[0] = key;
+            }
+        });
+
+        System.out.println("ClientsDAO.getClient" + identity[0]);
+
+        return localClients.get(identity[0]);
     }
 }

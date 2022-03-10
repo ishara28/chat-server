@@ -34,15 +34,14 @@ public class ClientThreadHandler extends Thread {
             while ((inputLine = in.readLine()) != null) {
                 data = (JSONObject) parser.parse(inputLine);
 
-                if (ResponseTypes.NEW_IDENTITY.equals(data.get("type"))) {
+                if (ResponseTypes.NEW_IDENTITY.equals(data.get("type"))) { //done
                     System.out.println(clientHandler.newIdentity(data, socket));
-                } else if (ResponseTypes.LIST.equals(data.get("type"))){
+                } else if (ResponseTypes.LIST.equals(data.get("type"))){ //done
                     System.out.println(chatroomHandler.list(socket));
-                } else if (ResponseTypes.WHO.equals(data.get("type"))){
-                    System.out.println(chatroomHandler.who(socket));
-                    out.println(ResponseTypes.WHO);
+                } else if (ResponseTypes.WHO.equals(data.get("type"))){ //done
+                    System.out.println(chatroomHandler.who(socket)); //done
                 } else if (ResponseTypes.CREATE_ROOM.equals(data.get("type"))){
-                    out.println(ResponseTypes.CREATE_ROOM);
+                    System.out.println(chatroomHandler.createRoom(data, socket));
                 } else if (ResponseTypes.JOIN_ROOM.equals(data.get("type"))){
                     out.println(ResponseTypes.JOIN_ROOM);
                 } else if (ResponseTypes.MOVE_JOIN.equals(data.get("type"))){
@@ -51,9 +50,8 @@ public class ClientThreadHandler extends Thread {
                     out.println(ResponseTypes.DELETE_ROOM);
                 } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){
                     out.println(ResponseTypes.MESSAGE);
-                } else if (ResponseTypes.QUIT.equals(data.get("type"))){
-                    out.println(ResponseTypes.QUIT);
-                    break;
+                } else if (ResponseTypes.QUIT.equals(data.get("type"))){ //todo: has a error when quit from another room
+                    System.out.println(clientHandler.disconnect(socket));
                 }
 
                 if (".".equals(data.get("type"))) {

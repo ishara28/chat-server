@@ -1,5 +1,5 @@
 import handlers.ClientThreadHandler;
-import handlers.ServerHandlerThread;
+import handlers.ServerThreadHandler;
 
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -15,8 +15,8 @@ public class Main {
 
             System.out.println("******* server coordination connection started on " + String.valueOf(coordinationSocket.getLocalSocketAddress()) + " *******");
 
-            ServerHandlerThread serverHandlerThread = new ServerHandlerThread(coordinationSocket);
-            serverHandlerThread.start();
+            ServerThreadHandler serverThreadHandler = new ServerThreadHandler(coordinationSocket);
+            serverThreadHandler.start();
 
             //client connection
             ServerSocket clientSocket = new ServerSocket();

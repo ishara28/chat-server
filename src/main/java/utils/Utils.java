@@ -1,5 +1,8 @@
 package utils;
 
+import java.util.Map;
+import java.util.stream.Stream;
+
 public class Utils {
     private static Utils instance;
 
@@ -27,6 +30,14 @@ public class Utils {
     public String getMainHallId(){
         return "MainHall-s";
 //        `MainHall-s${getServerId()}`;
+    }
+
+    public <K, V> Stream<K> keys(Map<K, V> map, V value) {
+        return map
+                .entrySet()
+                .stream()
+                .filter(entry -> value.equals(entry.getValue()))
+                .map(Map.Entry::getKey);
     }
 
 //    public String getServerId(){ //todo

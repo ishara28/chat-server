@@ -4,12 +4,13 @@ import constants.ResponseTypes;
 import daos.ChatRoomDAO;
 import daos.ClientDAO;
 import org.json.simple.JSONObject;
-import utils.Utils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import utils.Utils;
 
 public class ClientServices {
     private ClientDAO clientDAO;
@@ -70,6 +71,95 @@ public class ClientServices {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public boolean removeClient(Socket socket){
+        String roomid = clientDAO.getClient(socket).getRoomid();
+        String identity = clientDAO.getIdentity(socket);
+
+        if (roomid == null || identity == null){
+            return false;
+        }
+
+
+        // if the client is owner of a chatroom
+        if (chatroomDAO.isOwner(identity, roomid)) {
+            // delete room
+            ArrayList<String> participants = chatroomDAO.getParticipants(roomid);
+            String mainHallId = utils.getMainHallId();
+
+            participants.forEach((i) -> {
+                clientDAO.joinChatroom(mainHallId, i);
+                chatroomDAO.changeChatroom(identity, roomid, mainHallId);
+
+                // broadcast to previous room
+                JSONObject broadcastMessage = new JSONObject();
+                broadcastMessage.put("type", ResponseTypes.ROOM_CHANGE);
+                broadcastMessage.put("identity", i);
+                broadcastMessage.put("former", "");
+                broadcastMessage.put("roomid", mainHallId);
+                chatroomServices.broadcast(roomid, broadcastMessage);
+
+                // broadcast to mainhall
+                chatroomServices.broadcast(mainHallId, broadcastMessage);
+            });
+
+            // move all participants to the MainHall
+            participants.forEach((i) -> {
+                // move client to the mainHall
+                clientDAO.joinChatroom(mainHallId, i);
+                chatroomDAO.changeChatroom(identity, roomid, mainHallId);
+
+                // broadcast to previous room
+                JSONObject broadcastMessage = new JSONObject();
+                broadcastMessage.put("type", ResponseTypes.ROOM_CHANGE);
+                broadcastMessage.put("identity", i);
+                broadcastMessage.put("former", "");
+                broadcastMessage.put("roomid", mainHallId);
+                chatroomServices.broadcast(roomid, broadcastMessage);
+
+                // broadcast to mainhall
+                chatroomServices.broadcast(mainHallId, broadcastMessage);
+            });
+
+            // delete chatroom
+            chatroomDAO.deleteChatroom(roomid);
+            // inform other servers
+//            CommunicationService.informChatroomDeletion(roomid); //todo
+        } else {
+            // leave chatroom
+            chatroomDAO.removeParticipant(roomid, identity);
+
+            // broadcast to previous room
+            JSONObject broadcastMessage = new JSONObject();
+            broadcastMessage.put("type", ResponseTypes.ROOM_CHANGE);
+            broadcastMessage.put("identity", identity);
+            broadcastMessage.put("former", roomid);
+            broadcastMessage.put("roomid", "");
+            chatroomServices.broadcast(roomid, broadcastMessage);
+        }
+        // remove from client list
+        clientDAO.removeClient(socket);
+
+        // inform other servers
+//        await CommunicationService.informClientDeletion(identity); //todo
+
+
+        // delete connection
+        JSONObject message = new JSONObject();
+        message.put("type", ResponseTypes.ROOM_CHANGE);
+        message.put("identity", identity);
+        message.put("former", roomid);
+        message.put("roomid", "");
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("ClientService.removeClient done...");
+        return true;
     }
 
 //    static async removeClient(sock: Socket, forced: boolean): Promise<boolean> {
