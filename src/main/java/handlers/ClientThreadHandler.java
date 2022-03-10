@@ -34,9 +34,9 @@ public class ClientThreadHandler extends Thread {
             while ((inputLine = in.readLine()) != null) {
                 data = (JSONObject) parser.parse(inputLine);
 
-                if (ResponseTypes.NEW_IDENTITY.equals(data.get("type"))) {
+                if (ResponseTypes.NEW_IDENTITY.equals(data.get("type"))) { //done
                     System.out.println(clientHandler.newIdentity(data, socket));
-                } else if (ResponseTypes.LIST.equals(data.get("type"))){
+                } else if (ResponseTypes.LIST.equals(data.get("type"))){ //done
                     System.out.println(chatroomHandler.list(socket));
                 } else if (ResponseTypes.WHO.equals(data.get("type"))){
                     System.out.println(chatroomHandler.who(socket));
@@ -52,8 +52,7 @@ public class ClientThreadHandler extends Thread {
                 } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){
                     out.println(ResponseTypes.MESSAGE);
                 } else if (ResponseTypes.QUIT.equals(data.get("type"))){
-                    out.println(ResponseTypes.QUIT);
-                    break;
+                    System.out.println(clientHandler.disconnect(socket));
                 }
 
                 if (".".equals(data.get("type"))) {

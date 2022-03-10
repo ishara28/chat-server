@@ -11,14 +11,14 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerHandlerThread extends Thread {
+public class ServerThreadHandler extends Thread {
     private ServerSocket serverSocket;
     private PrintWriter out;
     private BufferedReader in;
     private JSONObject data;
     JSONParser parser = new JSONParser();
 
-    public ServerHandlerThread(ServerSocket serverSocket) {
+    public ServerThreadHandler(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 

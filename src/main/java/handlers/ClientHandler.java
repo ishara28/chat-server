@@ -30,9 +30,7 @@ public class ClientHandler {
         return clientServices.registerClient(data, socket);
     }
 
-
-
-//    public boolean disconnect(Socket socket, boolean forced){
-//        return ClientServices.removeClient(socket, forced);
-//    }
+    public boolean disconnect(Socket socket){
+        return clientServices.removeClient(socket);
+    }
 }

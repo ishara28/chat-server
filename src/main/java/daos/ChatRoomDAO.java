@@ -60,4 +60,38 @@ public class ChatRoomDAO {
         }
         return participants;
     }
+
+    public boolean isOwner(String identity, String roomid){
+        boolean isOwner = localChatRooms.get(roomid).getOwner() == identity;
+        System.out.println("ChatroomDAO.isOwner " + identity + " " + roomid + " " + isOwner);
+        return isOwner;
+    }
+
+    public void changeChatroom(String participant, String previousRoomId, String newRoomId) {
+        LocalChatRoom previousRoom = localChatRooms.get(previousRoomId);
+        ArrayList<String> previousRoomParticipants = previousRoom.getParticipants();
+        previousRoomParticipants.remove(participant);
+        previousRoom.setParticipants(previousRoomParticipants);
+        localChatRooms.put(previousRoomId, previousRoom);
+
+        LocalChatRoom newRoom = localChatRooms.get(newRoomId);
+        ArrayList<String> newRoomParticipants = newRoom.getParticipants();
+        newRoomParticipants.add(participant);
+        newRoom.setParticipants(newRoomParticipants);
+        localChatRooms.put(newRoomId, newRoom);
+    }
+
+    public void deleteChatroom(String roomid){
+        System.out.println("ChatroomDAO.deleteChatroom" + roomid);
+        localChatRooms.remove(roomid);
+    }
+
+    public void removeParticipant(String roomid, String participant){
+        System.out.println("ChatroomDAO.removeParticipant " + participant + " from " + roomid);
+        LocalChatRoom chatRoom = localChatRooms.get(roomid);
+        ArrayList<String> participants = chatRoom.getParticipants();
+        participants.remove(participant);
+        chatRoom.setParticipants(participants);
+        localChatRooms.put(roomid, chatRoom);
+    }
 }
