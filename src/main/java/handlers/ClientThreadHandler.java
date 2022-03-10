@@ -38,10 +38,10 @@ public class ClientThreadHandler extends Thread {
                     System.out.println(clientHandler.newIdentity(data, socket));
                 } else if (ResponseTypes.LIST.equals(data.get("type"))){ //done
                     System.out.println(chatroomHandler.list(socket));
-                } else if (ResponseTypes.WHO.equals(data.get("type"))){
-                    System.out.println(chatroomHandler.who(socket));
-                    out.println(ResponseTypes.WHO);
+                } else if (ResponseTypes.WHO.equals(data.get("type"))){ //done
+                    System.out.println(chatroomHandler.who(socket)); //done
                 } else if (ResponseTypes.CREATE_ROOM.equals(data.get("type"))){
+//                    System.out.println(chatroomHandler.createRoom(data, socket));
                     out.println(ResponseTypes.CREATE_ROOM);
                 } else if (ResponseTypes.JOIN_ROOM.equals(data.get("type"))){
                     out.println(ResponseTypes.JOIN_ROOM);
@@ -51,7 +51,7 @@ public class ClientThreadHandler extends Thread {
                     out.println(ResponseTypes.DELETE_ROOM);
                 } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){
                     out.println(ResponseTypes.MESSAGE);
-                } else if (ResponseTypes.QUIT.equals(data.get("type"))){
+                } else if (ResponseTypes.QUIT.equals(data.get("type"))){ //done
                     System.out.println(clientHandler.disconnect(socket));
                 }
 

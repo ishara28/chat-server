@@ -94,4 +94,9 @@ public class ChatRoomDAO {
         chatRoom.setParticipants(participants);
         localChatRooms.put(roomid, chatRoom);
     }
+
+    public LocalChatRoom getRoom(String roomid){
+        System.out.println("ChatroomDAO.getRoom" + roomid);
+        return localChatRooms.get(roomid);
+    }
 }

@@ -5,6 +5,7 @@ import daos.ChatRoomDAO;
 import daos.ClientDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import pojos.LocalChatRoom;
 import pojos.LocalClient;
 
 import java.io.IOException;
@@ -80,19 +81,31 @@ public class ChatRoomServices {
 
     public JSONObject listParticipants(Socket socket){
 
-        return null;
+        String roomid = clientDAO.getClient(socket).getRoomid();
 
-//        String roomid = clientDAO.getClient(socket).roomid;
-//        const roomid = clientsDAO.getClient(sock)?.roomid;
-//        if (!roomid) return false;
-//        const chatroom = ServiceLocator.chatroomDAO.getRoom(roomid);
-//        writeJSONtoSocket(sock, {
-//                type: responseTypes.ROOM_CONTENTS,
-//                roomid,
-//                identities: Array.from(chatroom.participants),
-//                owner: chatroom.owner ?? ""
-//        });
-//        console.log("ChatroomService.listParticipants done...");
-//        return true
+        if(roomid == null){
+            return null;
+        }
+
+        LocalChatRoom chatroom = chatRoomDAO.getRoom(roomid);
+        JSONObject message = new JSONObject();
+        message.put("type", ResponseTypes.ROOM_CONTENTS);
+        message.put("roomid", roomid);
+        JSONArray identities = new JSONArray();
+        identities.addAll(chatroom.getParticipants());
+        message.put("identities", identities);
+        message.put("owner", chatroom.getOwner());
+
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("ChatroomService.listParticipants done...");
+        return message;
     }
+
+
 }
