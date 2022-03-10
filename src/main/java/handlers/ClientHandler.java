@@ -1,39 +1,36 @@
 package handlers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import org.json.simple.JSONObject;
+import services.ClientServices;
+
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class ClientHandler extends Thread {
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+public class ClientHandler {
+    private ClientServices clientServices = ClientServices.getInstance();
 
-    public ClientHandler(Socket socket) {
-        this.clientSocket = socket;
+    private static ClientHandler instance;
+
+    private ClientHandler(){
     }
 
-    public void run() {
-        try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                if (".".equals(inputLine)) {
-                    out.println("bye");
-                    break;
+    public static ClientHandler getInstance(){
+        if (instance == null){
+            synchronized(ClientHandler.class){
+                if (instance == null){
+                    instance = new ClientHandler();//instance will be created at request time
                 }
-                out.println(inputLine);
             }
-
-            in.close();
-            out.close();
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        return instance;
+    }
+
+    public JSONObject newIdentity(JSONObject data, Socket socket) {
+        return clientServices.registerClient(data, socket);
+    }
+
+    public boolean disconnect(Socket socket){
+        return clientServices.removeClient(socket);
     }
 }
