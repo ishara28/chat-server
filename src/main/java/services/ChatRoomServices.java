@@ -153,4 +153,34 @@ public class ChatRoomServices {
         System.out.println("ChatroomService.createRoom done...");
         return createRoomMessage;
     }
+
+    public JSONObject joinRoom(JSONObject data, Socket socket) {
+        String roomid = data.get("roomid").toString();
+        String former = clientDAO.getClient(socket).getRoomid();
+        String identity = clientDAO.getIdentity(socket);
+
+        if(former == null || identity == null){
+            return null;
+        }
+
+        //todo: add if to check validity
+
+        clientDAO.joinChatroom(roomid, identity);
+        chatRoomDAO.changeChatroom(identity, former, roomid);
+
+        // broadcast to previous room
+        JSONObject broadcastMessage = new JSONObject();
+        broadcastMessage.put("type", ResponseTypes.ROOM_CHANGE);
+        broadcastMessage.put("identity", identity);
+        broadcastMessage.put("former", former);
+        broadcastMessage.put("roomid", roomid);
+
+        broadcast(former, broadcastMessage);
+
+        // broadcast to new room
+        broadcast(roomid, broadcastMessage);
+
+        return broadcastMessage;
+    }
+
 }

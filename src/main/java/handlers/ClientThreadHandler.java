@@ -39,11 +39,11 @@ public class ClientThreadHandler extends Thread {
                 } else if (ResponseTypes.LIST.equals(data.get("type"))){ //done
                     System.out.println(chatroomHandler.list(socket));
                 } else if (ResponseTypes.WHO.equals(data.get("type"))){ //done
-                    System.out.println(chatroomHandler.who(socket)); //done
-                } else if (ResponseTypes.CREATE_ROOM.equals(data.get("type"))){
+                    System.out.println(chatroomHandler.who(socket));
+                } else if (ResponseTypes.CREATE_ROOM.equals(data.get("type"))){ //done
                     System.out.println(chatroomHandler.createRoom(data, socket));
-                } else if (ResponseTypes.JOIN_ROOM.equals(data.get("type"))){
-                    out.println(ResponseTypes.JOIN_ROOM);
+                } else if (ResponseTypes.JOIN_ROOM.equals(data.get("type"))){ //done
+                    System.out.println(chatroomHandler.joinRoom(data, socket));
                 } else if (ResponseTypes.MOVE_JOIN.equals(data.get("type"))){
                     out.println(ResponseTypes.MOVE_JOIN);
                 } else if (ResponseTypes.DELETE_ROOM.equals(data.get("type"))){
