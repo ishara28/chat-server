@@ -36,4 +36,16 @@ public class ChatroomHandler {
     public JSONObject createRoom(JSONObject data, Socket socket) {
         return chatroomServices.createRoom(data, socket);
     }
+
+    public JSONObject joinRoom(JSONObject data, Socket socket) {
+        return chatroomServices.joinRoom(data, socket);
+    }
+
+    public JSONObject message(JSONObject data, Socket socket){
+        return chatroomServices.message(data, socket);
+    }
+
+    public JSONObject deleteRoom(JSONObject data, Socket socket){
+        return chatroomServices.deleteRoom(data, socket);
+    }
 }
