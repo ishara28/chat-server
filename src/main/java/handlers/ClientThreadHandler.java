@@ -39,17 +39,17 @@ public class ClientThreadHandler extends Thread {
                 } else if (ResponseTypes.LIST.equals(data.get("type"))){ //done
                     System.out.println(chatroomHandler.list(socket));
                 } else if (ResponseTypes.WHO.equals(data.get("type"))){ //done
-                    System.out.println(chatroomHandler.who(socket)); //done
-                } else if (ResponseTypes.CREATE_ROOM.equals(data.get("type"))){
+                    System.out.println(chatroomHandler.who(socket));
+                } else if (ResponseTypes.CREATE_ROOM.equals(data.get("type"))){ //done
                     System.out.println(chatroomHandler.createRoom(data, socket));
-                } else if (ResponseTypes.JOIN_ROOM.equals(data.get("type"))){
-                    out.println(ResponseTypes.JOIN_ROOM);
+                } else if (ResponseTypes.JOIN_ROOM.equals(data.get("type"))){ //done
+                    System.out.println(chatroomHandler.joinRoom(data, socket));
                 } else if (ResponseTypes.MOVE_JOIN.equals(data.get("type"))){
                     out.println(ResponseTypes.MOVE_JOIN);
-                } else if (ResponseTypes.DELETE_ROOM.equals(data.get("type"))){
-                    out.println(ResponseTypes.DELETE_ROOM);
-                } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){
-                    out.println(ResponseTypes.MESSAGE);
+                } else if (ResponseTypes.DELETE_ROOM.equals(data.get("type"))){ //doing
+                    System.out.println(chatroomHandler.deleteRoom(data, socket));
+                } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){ //done
+                    System.out.println(chatroomHandler.message(data, socket));
                 } else if (ResponseTypes.QUIT.equals(data.get("type"))){ //todo: has a error when quit from another room
                     System.out.println(clientHandler.disconnect(socket));
                 }
