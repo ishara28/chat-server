@@ -183,4 +183,42 @@ public class ChatRoomServices {
         return broadcastMessage;
     }
 
+    public JSONObject message(JSONObject data, Socket socket){
+        String content = data.get("content").toString();
+        String roomid = clientDAO.getClient(socket).getRoomid();
+        String identity = clientDAO.getIdentity(socket);
+
+        if(data == null || roomid == null || identity == null){
+            return null;
+        }
+
+        // broadcast to all members in chatroom
+        JSONObject message = new JSONObject();
+        message.put("type", ResponseTypes.MESSAGE);
+        message.put("identity", identity);
+        message.put("content", content);
+
+        broadcastExceptSender(roomid, message, identity);
+        return message;
+    }
+
+    public void broadcastExceptSender(String roomid, JSONObject message, String senderId){
+        ArrayList<String> participants = (ArrayList<String>) chatRoomDAO.getParticipants(roomid).clone();
+        participants.remove(senderId);
+
+        // get sockets
+        ArrayList<LocalClient> clients = clientDAO.getClientsFromId(participants);
+
+        // broadcast
+        clients.forEach((i) -> {
+            try {
+                out = new PrintWriter(i.getSocket().getOutputStream(), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            out.println(message);
+        });
+
+        System.out.println("ChatroomService.broadcast done...");
+    }
 }

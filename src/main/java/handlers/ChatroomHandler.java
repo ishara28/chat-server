@@ -40,4 +40,8 @@ public class ChatroomHandler {
     public JSONObject joinRoom(JSONObject data, Socket socket) {
         return chatroomServices.joinRoom(data, socket);
     }
+
+    public JSONObject message(JSONObject data, Socket socket){
+        return chatroomServices.message(data, socket);
+    }
 }

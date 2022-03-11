@@ -49,7 +49,7 @@ public class ClientThreadHandler extends Thread {
                 } else if (ResponseTypes.DELETE_ROOM.equals(data.get("type"))){
                     out.println(ResponseTypes.DELETE_ROOM);
                 } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){
-                    out.println(ResponseTypes.MESSAGE);
+                    System.out.println(chatroomHandler.message(data, socket));
                 } else if (ResponseTypes.QUIT.equals(data.get("type"))){ //todo: has a error when quit from another room
                     System.out.println(clientHandler.disconnect(socket));
                 }
