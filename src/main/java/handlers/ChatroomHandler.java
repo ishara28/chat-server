@@ -44,4 +44,8 @@ public class ChatroomHandler {
     public JSONObject message(JSONObject data, Socket socket){
         return chatroomServices.message(data, socket);
     }
+
+    public JSONObject deleteRoom(JSONObject data, Socket socket){
+        return chatroomServices.deleteRoom(data, socket);
+    }
 }

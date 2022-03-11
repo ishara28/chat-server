@@ -46,9 +46,9 @@ public class ClientThreadHandler extends Thread {
                     System.out.println(chatroomHandler.joinRoom(data, socket));
                 } else if (ResponseTypes.MOVE_JOIN.equals(data.get("type"))){
                     out.println(ResponseTypes.MOVE_JOIN);
-                } else if (ResponseTypes.DELETE_ROOM.equals(data.get("type"))){
-                    out.println(ResponseTypes.DELETE_ROOM);
-                } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){
+                } else if (ResponseTypes.DELETE_ROOM.equals(data.get("type"))){ //doing
+                    System.out.println(chatroomHandler.deleteRoom(data, socket));
+                } else if (ResponseTypes.MESSAGE.equals(data.get("type"))){ //done
                     System.out.println(chatroomHandler.message(data, socket));
                 } else if (ResponseTypes.QUIT.equals(data.get("type"))){ //todo: has a error when quit from another room
                     System.out.println(clientHandler.disconnect(socket));

@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import pojos.LocalChatRoom;
 import pojos.LocalClient;
+import utils.Utils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,12 +21,14 @@ public class ChatRoomServices {
     private JSONObject returnData;
     private JSONArray roomsJsonArray;
     private ClientDAO clientDAO;
+    private Utils utils;
 
     private static ChatRoomServices instance;
 
     private ChatRoomServices(){
         chatRoomDAO = ChatRoomDAO.getInstance();
         clientDAO = ClientDAO.getInstance();
+        utils = Utils.getInstance();
     }
 
     public static ChatRoomServices getInstance(){
@@ -220,5 +223,49 @@ public class ChatRoomServices {
         });
 
         System.out.println("ChatroomService.broadcast done...");
+    }
+
+    public JSONObject deleteRoom(JSONObject data, Socket socket){
+        String roomid = data.get("roomid").toString();
+        String identity = clientDAO.getIdentity(socket);
+        if (identity == null){
+            return null;
+        }
+
+        //todo: has to check validity
+        //todo: has check owner of the room: only owner can delete room
+        ArrayList<String> participants = (ArrayList<String>) chatRoomDAO.getParticipants(roomid).clone();
+        String mainHallId = utils.getMainHallId();
+        // move all participants to the MainHall
+        participants.forEach((i) -> {
+            // move client to the mainHall
+            clientDAO.joinChatroom(mainHallId, i);
+            chatRoomDAO.changeChatroom(i, roomid, mainHallId);
+            // broadcast to previous room
+            JSONObject broadcastMessage = new JSONObject();
+            broadcastMessage.put("type", ResponseTypes.ROOM_CHANGE);
+            broadcastMessage.put("identity", i);
+            broadcastMessage.put("former", roomid);
+            broadcastMessage.put("roomid", mainHallId);
+            broadcast(roomid, broadcastMessage);
+            // broadcast to mainhall
+            broadcast(mainHallId, broadcastMessage);
+        });
+        // delete chatroom
+        chatRoomDAO.deleteChatroom(roomid);
+
+        JSONObject returnMessage = new JSONObject();
+        returnMessage.put("type", ResponseTypes.DELETE_ROOM);
+        returnMessage.put("roomid", roomid);
+        returnMessage.put("approved", "true");
+
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.println(returnMessage);
+
+        return returnMessage;
     }
 }
