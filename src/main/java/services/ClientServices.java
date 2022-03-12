@@ -3,14 +3,13 @@ package services;
 import constants.ResponseTypes;
 import daos.ChatRoomDAO;
 import daos.ClientDAO;
+import models.Server;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import utils.Utils;
 
 public class ClientServices {
     private ClientDAO clientDAO;
@@ -19,7 +18,7 @@ public class ClientServices {
     private JSONObject outputData;
     private JSONObject returnData;
     private ChatRoomServices chatroomServices;
-    private Utils utils;
+    private Server server;
 
     private static ClientServices instance;
 
@@ -27,7 +26,7 @@ public class ClientServices {
         clientDAO = ClientDAO.getInstance();
         chatroomDAO = ChatRoomDAO.getInstance();
         chatroomServices = ChatRoomServices.getInstance();
-        utils = Utils.getInstance();
+        server = Server.getInstance();
     }
 
     public static ClientServices getInstance(){
@@ -61,9 +60,9 @@ public class ClientServices {
             outputData.put("type", ResponseTypes.ROOM_CHANGE);
             outputData.put("identity", data.get("identity").toString());
             outputData.put("former", "");
-            outputData.put("roomid", utils.getMainHallId());
+            outputData.put("roomid", server.getMainHallId());
             // broadcast message
-            chatroomServices.broadcast(utils.getMainHallId(), outputData);
+            chatroomServices.broadcast(server.getMainHallId(), outputData);
 
             System.out.println("ClientService.registerClient done...");
             return returnData;
@@ -86,7 +85,7 @@ public class ClientServices {
         if (chatroomDAO.isOwner(identity, roomid)) {
             // delete room
             ArrayList<String> participants = chatroomDAO.getParticipants(roomid);
-            String mainHallId = utils.getMainHallId();
+            String mainHallId = server.getMainHallId();
 
             participants.forEach((i) -> {
                 clientDAO.joinChatroom(mainHallId, i);

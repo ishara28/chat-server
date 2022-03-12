@@ -27,11 +27,6 @@ public class Utils {
         return true;
     }
 
-    public String getMainHallId(){
-        return "MainHall-s";
-//        `MainHall-s${getServerId()}`;
-    }
-
     public <K, V> Stream<K> keys(Map<K, V> map, V value) {
         return map
                 .entrySet()
@@ -40,10 +35,4 @@ public class Utils {
                 .map(Map.Entry::getKey);
     }
 
-//    public String getServerId(){ //todo
-//        if (!process.env.SERVER_ID) {
-//            return '1';
-//        }
-//        return process.env.SERVER_ID.trim();
-//    }
 }

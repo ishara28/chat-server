@@ -1,7 +1,7 @@
 package daos;
 
+import models.Server;
 import pojos.LocalClient;
-import utils.Utils;
 
 import java.net.Socket;
 import java.util.ArrayList;
@@ -10,12 +10,12 @@ import java.util.HashMap;
 public class ClientDAO {
 
     private static HashMap<String, LocalClient> localClients = new HashMap<>();
-    private Utils utils;
+    private Server server;
 
     private static ClientDAO instance;
 
     private ClientDAO(){
-        utils = Utils.getInstance();
+        server = Server.getInstance();
     }
 
     public static ClientDAO getInstance(){
@@ -32,7 +32,7 @@ public class ClientDAO {
     public void addNewClient(String identity, Socket socket){
         LocalClient localClient = new LocalClient();
         localClient.setSocket(socket);
-        localClient.setRoomid(utils.getMainHallId());
+        localClient.setRoomid(server.getMainHallId());
 
         localClients.put(identity, localClient);
 
