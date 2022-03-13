@@ -1,7 +1,7 @@
 package daos;
 
+import models.CurrentServer;
 import pojos.LocalClient;
-import utils.Utils;
 
 import java.net.Socket;
 import java.util.ArrayList;
@@ -10,12 +10,12 @@ import java.util.HashMap;
 public class ClientDAO {
 
     private static HashMap<String, LocalClient> localClients = new HashMap<>();
-    private Utils utils;
+    private CurrentServer currentServer;
 
     private static ClientDAO instance;
 
     private ClientDAO(){
-        utils = Utils.getInstance();
+        currentServer = CurrentServer.getInstance();
     }
 
     public static ClientDAO getInstance(){
@@ -32,7 +32,7 @@ public class ClientDAO {
     public void addNewClient(String identity, Socket socket){
         LocalClient localClient = new LocalClient();
         localClient.setSocket(socket);
-        localClient.setRoomid(utils.getMainHallId());
+        localClient.setRoomid(currentServer.getMainHallId());
 
         localClients.put(identity, localClient);
 
@@ -98,5 +98,11 @@ public class ClientDAO {
         System.out.println("ClientsDAO.getClient" + identity[0]);
 
         return localClients.get(identity[0]);
+    }
+
+    public boolean isRegistered(String identity) {
+        boolean isRegistered = localClients.containsKey(identity);
+        System.out.println("ClientsDAO.isRegistered " + identity + " " + isRegistered);
+        return isRegistered;
     }
 }

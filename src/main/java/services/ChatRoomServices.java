@@ -3,11 +3,11 @@ package services;
 import constants.ResponseTypes;
 import daos.ChatRoomDAO;
 import daos.ClientDAO;
+import models.CurrentServer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import pojos.LocalChatRoom;
 import pojos.LocalClient;
-import utils.Utils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,14 +21,14 @@ public class ChatRoomServices {
     private JSONObject returnData;
     private JSONArray roomsJsonArray;
     private ClientDAO clientDAO;
-    private Utils utils;
+    private CurrentServer currentServer;
 
     private static ChatRoomServices instance;
 
     private ChatRoomServices(){
         chatRoomDAO = ChatRoomDAO.getInstance();
         clientDAO = ClientDAO.getInstance();
-        utils = Utils.getInstance();
+        currentServer = CurrentServer.getInstance();
     }
 
     public static ChatRoomServices getInstance(){
@@ -235,7 +235,7 @@ public class ChatRoomServices {
         //todo: has to check validity
         //todo: has check owner of the room: only owner can delete room
         ArrayList<String> participants = (ArrayList<String>) chatRoomDAO.getParticipants(roomid).clone();
-        String mainHallId = utils.getMainHallId();
+        String mainHallId = currentServer.getMainHallId();
         // move all participants to the MainHall
         participants.forEach((i) -> {
             // move client to the mainHall
