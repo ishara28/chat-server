@@ -33,6 +33,10 @@ public class ServerDAO {
         return instance;
     }
 
+    public void setLeaderid(String leaderid) {
+        this.leaderid = leaderid;
+    }
+
     public String getLeaderid() {
         return leaderid;
     }

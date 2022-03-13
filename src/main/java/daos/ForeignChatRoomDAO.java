@@ -26,4 +26,14 @@ public class ForeignChatRoomDAO {
     public HashMap<String, ArrayList<String>> getForeignChatRooms() {
         return foreignChatRooms;
     }
+
+    public void saveChatrooms(HashMap<String, ArrayList<String>> chatrooms) {
+        chatrooms.forEach((k,v) -> {
+            if(foreignChatRooms.containsKey(k)){
+                foreignChatRooms.get(k).addAll(v);
+            } else{
+                foreignChatRooms.put(k, v);
+            }
+        });
+    }
 }

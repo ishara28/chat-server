@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CoordinationServices {
 
@@ -109,5 +112,20 @@ public class CoordinationServices {
                 return false;
             }
         }
+    }
+
+    public void saveUpdate(JSONObject data) {
+        serverDAO.setLeaderid(data.get("leaderid").toString());
+        updateDatabase(data);
+    }
+
+    public void updateDatabase(JSONObject data) {
+        HashMap<String, ArrayList<String>> clients = new HashMap<>();
+        clients.putAll((Map<? extends String, ? extends ArrayList<String>>) data.get("clients"));
+        foreignClientDAO.saveClients(clients);
+
+        HashMap<String, ArrayList<String>> chatrooms = new HashMap<>();
+        chatrooms.putAll((Map<? extends String, ? extends ArrayList<String>>) data.get("chatrooms"));
+        foreignChatRoomDAO.saveChatrooms(chatrooms);
     }
 }

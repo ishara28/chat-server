@@ -18,11 +18,13 @@ public class ServerThreadHandler extends Thread {
     private BufferedReader in;
     private JSONObject data;
     private LeaderHandler leaderHandler;
+    private CoordinationHandler coordinationHandler;
     JSONParser parser = new JSONParser();
 
     public ServerThreadHandler(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
         this.leaderHandler = LeaderHandler.getInstance();
+        this.coordinationHandler = CoordinationHandler.getInstance();
     }
 
     public void run() {
@@ -59,8 +61,9 @@ public class ServerThreadHandler extends Thread {
                     // received by other nodes
                     else if (ResponseTypes.REQUEST_DATA.equals(data.get("type"))){
                         System.out.println();
-                    } else if (ResponseTypes.BROADCAST_SERVER_UPDATE.equals(data.get("type"))){
-                        System.out.println();
+                    } else if (ResponseTypes.BROADCAST_SERVER_UPDATE.equals(data.get("type"))){ //done
+                        coordinationHandler.broadcastServerUpdate(data);
+                        System.out.println(data);
                     } else if (ResponseTypes.HEARTBEAT.equals(data.get("type"))){
                         System.out.println();
                     }

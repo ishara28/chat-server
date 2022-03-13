@@ -5,7 +5,6 @@ import daos.ForeignChatRoomDAO;
 import daos.ForeignClientDAO;
 import daos.ServerDAO;
 import models.CurrentServer;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
@@ -77,11 +76,11 @@ public class LeaderServices {
             JSONObject broadcastMessage = new JSONObject();
             broadcastMessage.put("type", ResponseTypes.BROADCAST_SERVER_UPDATE);
             broadcastMessage.put("leaderid", serverDAO.getLeaderid());
-            JSONArray messageClients = new JSONArray();
-            messageClients.addAll(foreignClientDAO.getForeignClients().keySet());
+            JSONObject messageClients = new JSONObject();
+            messageClients.putAll(foreignClientDAO.getForeignClients());
             broadcastMessage.put("clients", messageClients);
-            JSONArray messageRooms = new JSONArray();
-            messageRooms.addAll(foreignChatRoomDAO.getForeignChatRooms().keySet());
+            JSONObject messageRooms = new JSONObject();
+            messageRooms.putAll(foreignChatRoomDAO.getForeignChatRooms());
             broadcastMessage.put("chatrooms", messageRooms);
 
 

@@ -49,4 +49,14 @@ public class ForeignClientDAO {
     public HashMap<String, ArrayList<String>> getForeignClients() {
         return foreignClients;
     }
+
+    public void saveClients(HashMap<String, ArrayList<String>> clients) {
+        clients.forEach((k,v) -> {
+            if(foreignClients.containsKey(k)){
+                foreignClients.get(k).addAll(v);
+            } else{
+                foreignClients.put(k, v);
+            }
+        });
+    }
 }
