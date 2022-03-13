@@ -1,6 +1,6 @@
 package daos;
 
-import models.Server;
+import models.CurrentServer;
 import pojos.LocalChatRoom;
 
 import java.util.ArrayList;
@@ -11,15 +11,15 @@ public class ChatRoomDAO {
     public static HashMap<String, LocalChatRoom> localChatRooms = new HashMap<>();
 
     private static ChatRoomDAO instance;
-    private Server server;
+    private CurrentServer currentServer;
 
     private ChatRoomDAO(){
-        server = Server.getInstance();
+        currentServer = CurrentServer.getInstance();
 
         LocalChatRoom mainHall = new LocalChatRoom();
         mainHall.setOwner("");
         mainHall.setParticipants(new ArrayList<>());
-        localChatRooms.put(server.getMainHallId(), mainHall);
+        localChatRooms.put(currentServer.getMainHallId(), mainHall);
     }
 
     public static ChatRoomDAO getInstance(){
@@ -34,13 +34,13 @@ public class ChatRoomDAO {
     }
 
     public void addParticipantDefault(String participant){
-        System.out.println("ChatroomDAO.addParticipantDefault " + participant + " to " + server.getMainHallId());
+        System.out.println("ChatroomDAO.addParticipantDefault " + participant + " to " + currentServer.getMainHallId());
 
-        LocalChatRoom updatedChatRoom = localChatRooms.get(server.getMainHallId());
+        LocalChatRoom updatedChatRoom = localChatRooms.get(currentServer.getMainHallId());
         ArrayList<String> updatedParticipants = updatedChatRoom.getParticipants();
         updatedParticipants.add(participant);
         updatedChatRoom.setParticipants(updatedParticipants);
-        localChatRooms.put(server.getMainHallId(), updatedChatRoom);
+        localChatRooms.put(currentServer.getMainHallId(), updatedChatRoom);
     }
 
     public String [] getRoomIds(){

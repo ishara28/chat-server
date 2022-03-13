@@ -1,5 +1,6 @@
 package handlers;
 
+import constants.ResponseTypes;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -16,10 +17,12 @@ public class ServerThreadHandler extends Thread {
     private PrintWriter out;
     private BufferedReader in;
     private JSONObject data;
+    private LeaderHandler leaderHandler;
     JSONParser parser = new JSONParser();
 
     public ServerThreadHandler(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
+        this.leaderHandler = LeaderHandler.getInstance();
     }
 
     public void run() {
@@ -33,15 +36,44 @@ public class ServerThreadHandler extends Thread {
                 while ((inputLine = in.readLine()) != null) {
                     data = (JSONObject) parser.parse(inputLine);
 
+                    //election
+                    if (ResponseTypes.START_ELECTION.equals(data.get("type"))) {
+                        System.out.println();
+                    } else if (ResponseTypes.DECLARE_LEADER.equals(data.get("type"))){
+                        System.out.println();
+                    }
+
+                    //received by leader
+                    else if (ResponseTypes.IS_CLIENT.equals(data.get("type"))){ //done
+                        System.out.println(leaderHandler.isClient(data, socket));
+                    } else if (ResponseTypes.IS_CHATROOM.equals(data.get("type"))){
+                        System.out.println();
+                    } else if (ResponseTypes.CHATROOM_SERVER.equals(data.get("type"))){
+                        System.out.println();
+                    } else if (ResponseTypes.INFORM_ROOMDELETION.equals(data.get("type"))){
+                        System.out.println();
+                    } else if (ResponseTypes.INFORM_CLIENTDELETION.equals(data.get("type"))){
+                        System.out.println();
+                    }
+
+                    // received by other nodes
+                    else if (ResponseTypes.REQUEST_DATA.equals(data.get("type"))){
+                        System.out.println();
+                    } else if (ResponseTypes.BROADCAST_SERVER_UPDATE.equals(data.get("type"))){
+                        System.out.println();
+                    } else if (ResponseTypes.HEARTBEAT.equals(data.get("type"))){
+                        System.out.println();
+                    }
+
                     if (".".equals(data.get("type"))) {
                         out.println("bye");
                         break;
                     }
                 }
 
-                in.close();
-                out.close();
-                socket.close();
+//                in.close();
+//                out.close();
+//                socket.close();
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
