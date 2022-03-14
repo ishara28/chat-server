@@ -24,7 +24,9 @@ public class Utils {
         // check if identity is alphanumeric string starting with an upper or lower case character.
         // It must be at least 3 characters and no more than 16 characters long.
 //        return /^[A-Za-z]{1}[A-Za-z0-9]{2,15}$/.test(identity);
-        return true;
+        return (Character.toString(identity.charAt(0)).matches("[a-zA-Z]+")
+                && identity.matches("[a-zA-Z0-9]+") && identity.length() >= 3 && identity.length() <= 16);
+
     }
 
     public <K, V> Stream<K> keys(Map<K, V> map, V value) {
