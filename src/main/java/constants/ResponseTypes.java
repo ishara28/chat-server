@@ -26,4 +26,6 @@ public class ResponseTypes {
     public static final String DECLARE_LEADER = "declareleader";
     public static final String HEARTBEAT = "heartbeat";
     public static final String REQUEST_DATA = "requestdata";
+    public static final String CONFIG_PATH = "/home/ishara/Academic/Semesters/S8/Distributed Systems/Project/Our/chat-server/server_conf.txt";
 }
+

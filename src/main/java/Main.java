@@ -1,3 +1,4 @@
+import constants.ResponseTypes;
 import daos.ServerDAO;
 import handlers.ClientThreadHandler;
 import handlers.ServerThreadHandler;
@@ -16,7 +17,8 @@ public class Main {
             //*********************************
             // Todo: Use these lines only for debugging
             String args1 = "s3";
-            String args2 = "/home/dilanka_rathnasiri/Documents/chat-server/server_conf.txt";
+//            String args2 = "/home/dilanka_rathnasiri/Documents/chat-server/server_conf.txt";
+            String args2 = ResponseTypes.CONFIG_PATH;
 
             ServerDAO serverDAO = ServerDAO.getInstance();
             serverDAO.setParameters(args1, args2);
